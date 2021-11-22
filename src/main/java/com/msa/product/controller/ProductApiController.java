@@ -23,4 +23,9 @@ public class ProductApiController {
     public void updateProduct(@RequestParam Long itemId, @RequestBody @Valid ProductUpdateRequestDto product) {
         productService.updateProduct(itemId, product);
     }
+
+    @DeleteMapping(path = "/products")
+    public void deleteProduct(@RequestParam Long itemId) {
+        productService.deleteProduct(itemId);
+    }
 }
