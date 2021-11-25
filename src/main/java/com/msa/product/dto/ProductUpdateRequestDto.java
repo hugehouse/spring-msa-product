@@ -1,6 +1,5 @@
 package com.msa.product.dto;
 
-import com.msa.product.domain.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

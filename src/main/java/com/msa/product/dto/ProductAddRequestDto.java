@@ -8,9 +8,10 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+// !필드를 초기화하는 코드를 작성하지 않아도 RequestBody에 의해 초기화가 됨.
 @Getter
 @NoArgsConstructor
-public class ProductAddRequestDto { // !필드를 초기화하는 코드를 작성하지 않아도 초기화가 됨.
+public class ProductAddRequestDto {
 
     @NotBlank(message = "title을 입력해주세요.")
     @Size(max = 30)
