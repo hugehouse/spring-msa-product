@@ -1,6 +1,5 @@
 package com.msa.product.controller;
 
-import com.msa.product.domain.Product;
 import com.msa.product.dto.ProductListResponseDto;
 import com.msa.product.dto.ProductResponseDto;
 import com.msa.product.service.ProductService;
