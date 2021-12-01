@@ -37,6 +37,8 @@ dependencies {
 
 	// Rest API
 
+	// unknown enum constant When.MAYBE : class file for javax.annotation.meta.When not found 에러 해결
+	implementation 'com.google.code.findbugs:jsr305:3.0.2'
 }
 
 test {

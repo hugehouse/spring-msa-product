@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class ProductResponseDto {
-    private String title;
-    private int price;
-    private int category;
-    private int stock;
+    private final String title;
+    private final int price;
+    private final int category;
+    private final int stock;
 
     public ProductResponseDto(Product product) {
         this.title = product.getTitle();

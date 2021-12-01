@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.net.URI;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,9 +23,8 @@ public class ProductApiController {
     // body -> set된 내용을 토대로 ResponseEntity 리턴
     @PostMapping(path = "/products")
     public ResponseEntity<Product> addProduct(@RequestBody @Valid ProductAddRequestDto product) {
-        EntityModel<Product>
         return ResponseEntity
-                .created()
+                .created(URI.create("gg"))
                 .body(productService.addProduct(product));
     }
 

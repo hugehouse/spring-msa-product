@@ -2,10 +2,8 @@ package com.msa.product.service;
 
 import com.msa.product.domain.Product;
 import com.msa.product.dto.ProductAddRequestDto;
-import com.msa.product.dto.ProductResponseDto;
 import com.msa.product.dto.ProductUpdateRequestDto;
 import com.msa.product.repository.ProductRepository;
-import com.msa.product.util.PageLimitNormalizer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -19,10 +17,9 @@ public class ProductService {
     private final ProductRepository productRepository;
 
     @Transactional(readOnly = true)
-    public ProductResponseDto findProduct(Long itemId) {
-        Product product = productRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
-        return new ProductResponseDto(product);
+    public Product findProduct(Long itemId) {
+        return productRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 제품을 찾을 수 없습니다."));
     }
 
     // Limit이 정해진 개수를 넘지 않도록 정규화 과정을 거침
@@ -30,7 +27,7 @@ public class ProductService {
     public Page<Product> findPagingProducts(int offset, int limit) {
         return productRepository.findAll(PageRequest.of(
                 offset,
-                PageLimitNormalizer.normalize(limit),
+                limit,
                 Sort.Direction.DESC, "id"));
     }
 
@@ -42,7 +39,7 @@ public class ProductService {
     @Transactional
     public void updateProduct(Long itemId, ProductUpdateRequestDto updateData) {
         Product product = productRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 제품을 찾을 수 없습니다."));
         product.updateEntity(
                 updateData.getTitle(),
                 updateData.getPrice(),
@@ -53,7 +50,7 @@ public class ProductService {
     @Transactional
     public void deleteProduct(Long itemId) {
         Product product = productRepository.findById(itemId)
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다."));
+                .orElseThrow(() -> new IllegalArgumentException("해당 제품을 찾을 수 없습니다."));
         productRepository.delete(product);
     }
 }
