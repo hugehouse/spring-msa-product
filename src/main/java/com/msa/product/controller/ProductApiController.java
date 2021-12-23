@@ -1,5 +1,6 @@
 package com.msa.product.controller;
 
+import com.msa.product.controller.converter.EntityToModelConverter;
 import com.msa.product.domain.Product;
 import com.msa.product.dto.ProductAddRequestDto;
 import com.msa.product.dto.ProductUpdateRequestDto;
@@ -17,24 +18,28 @@ import java.net.URI;
 @RestController
 public class ProductApiController {
     private final ProductService productService;
+    private final EntityToModelConverter entityToModelConverter;
 
-    // status -> static, 같은 파일 내 builder 클래스 리턴
-    // header -> builder 클래스 내의 클래스(setter)
-    // body -> set된 내용을 토대로 ResponseEntity 리턴
+    // ResponseEntity는 필드로 Object를 사용하기 때문에 어떤 클래스를 넣어도 됨.
     @PostMapping(path = "/products")
-    public ResponseEntity<Product> addProduct(@RequestBody @Valid ProductAddRequestDto product) {
+    public ResponseEntity<EntityModel<Product>> addProduct(@RequestBody @Valid ProductAddRequestDto product) {
         return ResponseEntity
-                .created(URI.create("gg"))
-                .body(productService.addProduct(product));
+                .status(HttpStatus.CREATED)
+                .body(entityToModelConverter.toModel(productService.addProduct(product)));
     }
 
     @PutMapping(path = "/products")
-    public void updateProduct(@RequestParam Long itemId, @RequestBody @Valid ProductUpdateRequestDto product) {
-        productService.updateProduct(itemId, product);
+    public ResponseEntity<EntityModel<Product>> updateProduct(@RequestParam Long itemId, @RequestBody @Valid ProductUpdateRequestDto product) {
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(entityToModelConverter.toModel(productService.updateProduct(itemId, product)));
     }
 
     @DeleteMapping(path = "/products")
-    public void deleteProduct(@RequestParam Long itemId) {
+    public ResponseEntity deleteProduct(@RequestParam Long itemId) {
         productService.deleteProduct(itemId);
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(entityToModelConverter.getListLink());
     }
 }
