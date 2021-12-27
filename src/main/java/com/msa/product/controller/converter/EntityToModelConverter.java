@@ -2,6 +2,8 @@ package com.msa.product.controller.converter;
 
 import com.msa.product.controller.IndexController;
 import com.msa.product.domain.Product;
+import com.msa.product.handler.ErrorHolder;
+import com.msa.product.handler.ErrorResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
@@ -16,21 +18,17 @@ import static com.msa.product.util.PageLimitNormalizer.normalize;
 @Component
 public class EntityToModelConverter {
 
-    // create 이후 노출
+    // create, update 이후 노출
     public EntityModel<Product> toModel(Product entity) {
-        return EntityModel.of(entity,
-                linkTo(methodOn(IndexController.class).productDetail(entity.getId())).withSelfRel(),
-                getPagingLink(0, 0, "list"));
+        return EntityModel.of(entity, getDetailSelfLink(entity.getId()), getPagingLink(0, 0, "list"));
     }
 
     // detail 페이지에서 노출
     public EntityModel<Product> toModel(Product entity, int offset, int limit) {
-        return EntityModel.of(entity,
-                linkTo(methodOn(IndexController.class).productDetail(entity.getId())).withSelfRel(),
-                getPagingLink(offset, limit, "list"));
+        return EntityModel.of(entity, getDetailSelfLink(entity.getId()), getPagingLink(offset, limit, "list"));
     }
 
-    // /products(list)에서 노출
+    // list 페이지에서 products의 링크 표현
     public EntityModel<Product> toModelWithPage(Product entity, int offset, int limit) {
         return EntityModel.of(entity,
                 linkTo(methodOn(IndexController.class).productDetailWithPageInfo(entity.getId(), offset, normalize(limit))).withSelfRel(),
@@ -42,6 +40,12 @@ public class EntityToModelConverter {
         return EntityModel.of(getPagingLink(0, 0, "list"));
     }
 
+    // error 코드와 list 링크를 함께 표현
+    public EntityModel<ErrorHolder> getListLink(ErrorResponse error) {
+        return EntityModel.of(new ErrorHolder(error), getPagingLink(0, 0, "list"));
+    }
+
+    // list 페이지에서 페이징 링크 표현
     public CollectionModel<EntityModel<Product>> toCollectionModel(List<EntityModel<Product>> products,
                                                                    Page<Product> pagedProduct, int offset, int limit) {
         CollectionModel<EntityModel<Product>> model = CollectionModel.of(products,
@@ -60,5 +64,9 @@ public class EntityToModelConverter {
 
     private Link getPagingLink(int offset, int limit, String rel) {
         return linkTo(methodOn(IndexController.class).pagingProducts(offset, normalize(limit))).withRel(rel);
+    }
+
+    private Link getDetailSelfLink(Long id) {
+        return linkTo(methodOn(IndexController.class).productDetail(id)).withSelfRel();
     }
 }
