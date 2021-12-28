@@ -3,7 +3,8 @@ package com.msa.product.handler;
 import lombok.Getter;
 
 public enum ErrorResponse {
-    NotFoundContent(4001, "Not found content");
+    NotFoundContent(4001, "Not found content"),
+    InsertConstraintViolation(4002, "violated constraint");
 
 
     private int code;

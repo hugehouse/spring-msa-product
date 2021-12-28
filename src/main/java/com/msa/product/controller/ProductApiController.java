@@ -22,14 +22,14 @@ public class ProductApiController {
 
     // ResponseEntity는 필드로 Object를 사용하기 때문에 어떤 클래스를 넣어도 됨.
     @PostMapping(path = "/products")
-    public ResponseEntity<EntityModel<Product>> addProduct(@RequestBody @Valid ProductAddRequestDto product) {
+    public ResponseEntity<EntityModel<Product>> addProduct(@RequestBody ProductAddRequestDto product) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(entityToModelConverter.toModel(productService.addProduct(product)));
     }
 
     @PutMapping(path = "/products")
-    public ResponseEntity<EntityModel<Product>> updateProduct(@RequestParam Long itemId, @RequestBody @Valid ProductUpdateRequestDto product) {
+    public ResponseEntity<EntityModel<Product>> updateProduct(@RequestParam Long itemId, @RequestBody ProductUpdateRequestDto product) {
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(entityToModelConverter.toModel(productService.updateProduct(itemId, product)));
