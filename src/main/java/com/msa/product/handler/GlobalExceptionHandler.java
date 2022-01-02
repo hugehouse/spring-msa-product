@@ -31,7 +31,7 @@ public class GlobalExceptionHandler {
                         getResultMessage(e.getConstraintViolations().iterator())));
     }
 
-    protected String getResultMessage(final Iterator<ConstraintViolation<?>> violationIterator) {
+    private String getResultMessage(final Iterator<ConstraintViolation<?>> violationIterator) {
         final StringBuilder resultMessageBuilder = new StringBuilder();
         while (violationIterator.hasNext()) {
             final ConstraintViolation<?> constraintViolation = violationIterator.next();

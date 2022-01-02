@@ -23,7 +23,7 @@ public class IndexController {
     private final ProductService productService;
     private final EntityToModelConverter entityToModelConverter;
 
-    // 단순 detail 링크(리스트 rel 표시 안함)
+    // 단순 detail 링크(리스트 rel 표시 없음)
     @GetMapping(path = "/products/item/{id}")
     public EntityModel<Product> productDetail(@PathVariable Long id) {
         return entityToModelConverter.toModel(productService.findProduct(id));

@@ -18,6 +18,10 @@ repositories {
 	mavenCentral()
 }
 
+ext {
+	set('springCloudVersion', "2020.0.5")
+}
+
 dependencies {
 	// Starter
 	implementation 'org.springframework.boot:spring-boot-starter-web'
@@ -39,7 +43,17 @@ dependencies {
 
 	// unknown enum constant When.MAYBE : class file for javax.annotation.meta.When not found 에러 해결
 	implementation 'com.google.code.findbugs:jsr305:3.0.2'
+
+	// discovery system
+	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
 }
+
+dependencyManagement {
+	imports {
+		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+	}
+}
+
 
 test {
 	useJUnitPlatform()
