@@ -1,4 +1,4 @@
-package com.msa.product.controller;
+package com.msa.product.controller.api;
 
 import com.msa.product.controller.converter.EntityToModelConverter;
 import com.msa.product.domain.Product;
@@ -11,33 +11,37 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.net.URI;
-
 @RequiredArgsConstructor
+@RequestMapping("/products")
 @RestController
 public class ProductApiController {
     private final ProductService productService;
     private final EntityToModelConverter entityToModelConverter;
 
     // ResponseEntity는 필드로 Object를 사용하기 때문에 어떤 클래스를 넣어도 됨.
-    @PostMapping(path = "/products")
-    public ResponseEntity<EntityModel<Product>> addProduct(@RequestBody ProductAddRequestDto product) {
+    @PostMapping
+    public ResponseEntity<EntityModel<Product>> addProduct(@RequestBody ProductAddRequestDto entity) {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(entityToModelConverter.toModel(productService.addProduct(product)));
+                .body(entityToModelConverter.toModel(productService.addProduct(entity)));
     }
 
-    @PutMapping(path = "/products")
-    public ResponseEntity<EntityModel<Product>> updateProduct(@RequestParam Long itemId, @RequestBody ProductUpdateRequestDto product) {
+    @PutMapping("/{id}")
+    public ResponseEntity<EntityModel<Product>> updateProduct(@PathVariable Long id, @RequestBody ProductUpdateRequestDto entity) {
         return ResponseEntity
                 .status(HttpStatus.OK)
-                .body(entityToModelConverter.toModel(productService.updateProduct(itemId, product)));
+                .body(entityToModelConverter.toModel(productService.updateProduct(id, entity)));
     }
 
-    @DeleteMapping(path = "/products")
-    public ResponseEntity deleteProduct(@RequestParam Long itemId) {
-        productService.deleteProduct(itemId);
+    @PutMapping("/purchase/{id}")
+    public ResponseEntity<EntityModel<Product>> updateProduct(@PathVariable Long id, @RequestParam int amount) {
+        productService.updateProduct(id, amount); // 실패 시 exception 발생
+        return ResponseEntity.noContent().build(); // 성공 시 응답 코드 204 전달
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteProduct(@PathVariable Long id) {
+        productService.deleteProduct(id);
         return ResponseEntity
                 .status(HttpStatus.OK)
                 .body(entityToModelConverter.getListLink());

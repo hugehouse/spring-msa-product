@@ -52,6 +52,15 @@ public class ProductService {
         return product;
     }
 
+    // 구입 요청 시
+    @Transactional
+    public Product updateProduct(Long itemId, int amount) {
+        Product product = productRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 제품을 찾을 수 없습니다."));
+        product.reduceStock(amount);
+        return product;
+    }
+
     @Transactional
     public void deleteProduct(Long itemId) {
         Product product = productRepository.findById(itemId)

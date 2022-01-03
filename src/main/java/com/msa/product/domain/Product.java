@@ -1,5 +1,8 @@
 package com.msa.product.domain;
 
+import com.msa.product.handler.ErrorHolder;
+import com.msa.product.handler.ErrorResponse;
+import com.msa.product.handler.exception.PurchaseFailureException;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -41,5 +44,14 @@ public class Product extends BaseTimeEntity {
         this.price = price;
         this.category = category;
         this.stock = stock;
+    }
+
+    public void reduceStock(int amount) {
+        if((this.stock - amount) >= 0) {
+            this.stock -= amount;
+        }
+        else {
+            throw new PurchaseFailureException(new ErrorHolder(ErrorResponse.StockLack));
+        }
     }
 }

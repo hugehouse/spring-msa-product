@@ -1,6 +1,7 @@
 package com.msa.product.handler;
 
 import com.msa.product.controller.converter.EntityToModelConverter;
+import com.msa.product.handler.exception.PurchaseFailureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +20,8 @@ public class GlobalExceptionHandler {
     // 존재하지 않는 페이지 접근
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity handleIllegalArgumentException(IllegalArgumentException e) {
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).
-                body(entityToModelConverter.getListLink(ErrorResponse.NotFoundContent));
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(entityToModelConverter.getListLink(ErrorResponse.NotFoundContent, e.getLocalizedMessage()));
     }
 
     // Vaildation 에러 처리
@@ -29,6 +30,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorHolder(ErrorResponse.InsertConstraintViolation,
                         getResultMessage(e.getConstraintViolations().iterator())));
+    }
+
+    // 구매 실패 에러 처리
+    @ExceptionHandler(value = PurchaseFailureException.class)
+    public ResponseEntity handlePurchaseFailureException(PurchaseFailureException e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(e.getErrorHolder());
     }
 
     private String getResultMessage(final Iterator<ConstraintViolation<?>> violationIterator) {

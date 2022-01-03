@@ -4,7 +4,8 @@ import lombok.Getter;
 
 public enum ErrorResponse {
     NotFoundContent(4001, "Not found content"),
-    InsertConstraintViolation(4002, "violated constraint");
+    InsertConstraintViolation(4002, "Violated constraint"),
+    StockLack(4003, "Lack of stock");
 
 
     private int code;
