@@ -30,16 +30,6 @@ public class IndexController {
         return entityToModelConverter.toModel(productService.findProduct(id));
     }
 
-    // 단순 detail 링크(리스트 rel 표시 없음)
-    @GetMapping("/purchase/{id}")
-    public EntityModel<Product> productDetail(@PathVariable Long id, @RequestParam int amount) {
-        Product product = productService.findProduct(id);
-        if(product.getStock() - amount < 0) { // 재고 부족 시 Exception 발생
-            throw new PurchaseFailureException(new ErrorHolder(ErrorResponse.StockLack));
-        }
-        return entityToModelConverter.toModel(product);
-    }
-
     // 리스트를 통해 접근하는 detail 링크
     @GetMapping("/items/{id}")
     public EntityModel<Product> productDetailWithPageInfo(@PathVariable Long id,

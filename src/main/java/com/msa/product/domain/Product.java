@@ -47,11 +47,15 @@ public class Product extends BaseTimeEntity {
     }
 
     public void reduceStock(int amount) {
+        if(amount < 0) {
+            throw new PurchaseFailureException(new ErrorHolder(ErrorResponse.negativeAmount), id);
+        }
+
         if((this.stock - amount) >= 0) {
             this.stock -= amount;
         }
         else {
-            throw new PurchaseFailureException(new ErrorHolder(ErrorResponse.StockLack));
+            throw new PurchaseFailureException(new ErrorHolder(ErrorResponse.StockLack), id);
         }
     }
 }

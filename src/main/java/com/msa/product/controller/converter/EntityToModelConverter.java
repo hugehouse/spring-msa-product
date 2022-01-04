@@ -3,12 +3,11 @@ package com.msa.product.controller.converter;
 import com.msa.product.controller.IndexController;
 import com.msa.product.link.LinkList;
 import com.msa.product.domain.Product;
-import com.msa.product.handler.ErrorHolder;
-import com.msa.product.handler.ErrorResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
+import org.springframework.hateoas.RepresentationModel;
 import org.springframework.stereotype.Component;
 import java.util.List;
 
@@ -20,18 +19,12 @@ public class EntityToModelConverter {
 
     // create, update 이후 노출
     public EntityModel<Product> toModel(Product entity) {
-        return EntityModel.of(entity
-                , getDetailLink(entity.getId())
-                , getPagingLink(0, 0, "list"));
+        return getDetailEntityModel(entity, entity.getId(), 0, 0);
     }
 
     // detail 페이지에서 노출
     public EntityModel<Product> toModel(Product entity, int offset, int limit) {
-        Long id = entity.getId();
-        return EntityModel.of(entity
-                , getDetailLink(id)
-                , getPagingLink(offset, limit, "list")
-                , getDetailOrderLink(id));
+        return getDetailEntityModel(entity, entity.getId(), offset, limit);
     }
 
     // list 페이지에서 products의 링크 표현
@@ -42,13 +35,8 @@ public class EntityToModelConverter {
     }
 
     // delete 이후 노출
-    public EntityModel getListLink() {
-        return EntityModel.of(getPagingLink(0, 0, "list"));
-    }
-
-    // error 코드와 list 링크를 함께 표현
-    public EntityModel<ErrorHolder> getListLink(ErrorResponse error, String details) {
-        return EntityModel.of(new ErrorHolder(error, details), getPagingLink(0, 0, "list"));
+    public RepresentationModel getListLink() {
+        return new RepresentationModel(getPagingLink(0, 0, "list"));
     }
 
     // list 페이지에서 페이징 링크 표현
@@ -66,6 +54,13 @@ public class EntityToModelConverter {
             model.add(getPagingLink(pagedProduct.getTotalPages()-1, limit, "last"));
         }
         return model;
+    }
+
+    private EntityModel<Product> getDetailEntityModel(Product entity, Long id, int offset, int limit) {
+        return EntityModel.of(entity
+                , getDetailLink(id)
+                , getPagingLink(offset, limit, "list")
+                , getDetailOrderLink(id));
     }
 
     private Link getPagingLink(int offset, int limit, String rel) {

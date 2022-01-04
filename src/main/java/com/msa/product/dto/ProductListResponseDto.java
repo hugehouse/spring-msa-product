@@ -3,6 +3,7 @@ package com.msa.product.dto;
 import com.msa.product.domain.Product;
 import lombok.Getter;
 
+// 현재 미사용, 사용 예정
 @Getter
 public class ProductListResponseDto {
     private final Long id;

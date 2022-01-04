@@ -41,7 +41,7 @@ public class ProductService {
     }
 
     @Transactional
-    public Product updateProduct(Long itemId, ProductUpdateRequestDto updateData) {
+    public Product updateProduct(Long itemId, @Valid ProductUpdateRequestDto updateData) {
         Product product = productRepository.findById(itemId)
                 .orElseThrow(() -> new IllegalArgumentException("해당 제품을 찾을 수 없습니다."));
         product.updateEntity(

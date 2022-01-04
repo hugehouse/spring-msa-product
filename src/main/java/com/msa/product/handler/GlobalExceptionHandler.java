@@ -1,8 +1,10 @@
 package com.msa.product.handler;
 
+import com.msa.product.controller.IndexController;
 import com.msa.product.controller.converter.EntityToModelConverter;
 import com.msa.product.handler.exception.PurchaseFailureException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,6 +14,9 @@ import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import java.util.Iterator;
 
+import static com.msa.product.util.PageLimitNormalizer.normalize;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
+
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -19,9 +24,10 @@ public class GlobalExceptionHandler {
 
     // 존재하지 않는 페이지 접근
     @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity handleIllegalArgumentException(IllegalArgumentException e) {
+    public ResponseEntity<EntityModel<ErrorHolder>> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                        .body(entityToModelConverter.getListLink(ErrorResponse.NotFoundContent, e.getLocalizedMessage()));
+                .body(EntityModel.of(new ErrorHolder(ErrorResponse.NotFoundContent, e.getLocalizedMessage())
+                        , linkTo(methodOn(IndexController.class).pagingProducts(0, normalize(0))).withRel("list")));
     }
 
     // Vaildation 에러 처리
@@ -32,11 +38,12 @@ public class GlobalExceptionHandler {
                         getResultMessage(e.getConstraintViolations().iterator())));
     }
 
-    // 구매 실패 에러 처리
+    // 구매 실패 에러 처리, 제품 link 포함
     @ExceptionHandler(value = PurchaseFailureException.class)
-    public ResponseEntity handlePurchaseFailureException(PurchaseFailureException e) {
+    public ResponseEntity<EntityModel<ErrorHolder>> handlePurchaseFailureException(PurchaseFailureException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(e.getErrorHolder());
+                .body(EntityModel.of(e.getErrorHolder()
+                        , linkTo(methodOn(IndexController.class).productDetail(e.getId())).withSelfRel()));
     }
 
     private String getResultMessage(final Iterator<ConstraintViolation<?>> violationIterator) {
