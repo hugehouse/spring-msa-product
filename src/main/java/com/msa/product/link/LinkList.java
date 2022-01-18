@@ -1,7 +1,7 @@
 package com.msa.product.link;
 
 public enum LinkList {
-    checkOut("http://122.45.184.159:8082/pay/");
+    checkOut("http://localhost:8082/pay/");
 
     private String link;
 
