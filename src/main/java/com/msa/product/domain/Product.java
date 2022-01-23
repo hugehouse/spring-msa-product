@@ -10,9 +10,13 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
+/*
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+Jpa의 작업 중 Entity를 Proxy로 감싸는 작업을 위해 기본 생성자 구현, 무분별한 생성을 막기 위해 protected로 설정
+*/
 @Getter
 @Entity
-@NoArgsConstructor(access = AccessLevel.PROTECTED) // Jpa의 작업 중 Entity를 Proxy로 감싸는 작업을 위해 기본 생성자 구현, 무분별한 생성을 막기 위해 protected로 설정
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Product extends BaseTimeEntity {
 
     @Id
