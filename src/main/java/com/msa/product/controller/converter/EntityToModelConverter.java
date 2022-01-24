@@ -31,7 +31,7 @@ public class EntityToModelConverter {
     public EntityModel<Product> toModelWithPage(Product entity, int offset, int limit) {
         return EntityModel.of(entity,
                 linkTo(methodOn(IndexController.class).productDetailWithPageInfo(entity.getId(), offset
-                        , normalize(limit))).withSelfRel(), getPagingLink(offset, limit, "list"));
+                        , normalize(limit))).withSelfRel());
     }
 
     // delete 이후 노출
@@ -43,7 +43,7 @@ public class EntityToModelConverter {
     public CollectionModel<EntityModel<Product>> toCollectionModel(List<EntityModel<Product>> products,
                                                                    Page<Product> pagedProduct, int offset, int limit) {
         CollectionModel<EntityModel<Product>> model = CollectionModel.of(products,
-                linkTo(methodOn(IndexController.class).pagingProducts(offset, normalize(limit))).withSelfRel());
+                linkTo(methodOn(IndexController.class).pagingProducts(offset, limit)).withSelfRel());
 
         if(pagedProduct.hasPrevious()) {
             model.add(getPagingLink(0, limit, "first"));
