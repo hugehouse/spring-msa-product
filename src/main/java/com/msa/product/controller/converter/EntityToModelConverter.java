@@ -58,17 +58,17 @@ public class EntityToModelConverter {
 
     private EntityModel<Product> getDetailEntityModel(Product entity, Long id, int offset, int limit) {
         return EntityModel.of(entity
-                , getDetailLink(id)
+                , getDetailLink(id, "self")
                 , getPagingLink(offset, limit, "list")
                 , getDetailOrderLink(id));
     }
 
-    private Link getPagingLink(int offset, int limit, String rel) {
-        return linkTo(methodOn(IndexController.class).pagingProducts(offset, normalize(limit))).withRel(rel);
+    public Link getDetailLink(Long id, String rel) {
+        return linkTo(methodOn(IndexController.class).productDetail(id)).withRel(rel);
     }
 
-    private Link getDetailLink(Long id) {
-        return linkTo(methodOn(IndexController.class).productDetail(id)).withSelfRel();
+    private Link getPagingLink(int offset, int limit, String rel) {
+        return linkTo(methodOn(IndexController.class).pagingProducts(offset, normalize(limit))).withRel(rel);
     }
 
     private Link getDetailOrderLink(Long id) {

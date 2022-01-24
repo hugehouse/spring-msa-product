@@ -2,6 +2,7 @@ package com.msa.product.controller;
 
 import com.msa.product.controller.converter.EntityToModelConverter;
 import com.msa.product.domain.Product;
+import com.msa.product.dto.ProductInfoInOrderDto;
 import com.msa.product.service.ProductService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -46,5 +47,13 @@ public class IndexController {
                         .toModelWithPage(entity, offset, normalizedLimit)).collect(Collectors.toList());
         // Iterable로 확장된 클래스가 필요하기 때문에 List로 넘긴다. 이후 CollectionModel 내의 필드에 ArrayList 형식으로 저장한다.
         return entityToModelConverter.toCollectionModel(products, pagedProducts, offset, normalizedLimit);
+    }
+
+    @GetMapping("/orders/{id}")
+    public ProductInfoInOrderDto infoInOrder(@PathVariable Long id) {
+        return ProductInfoInOrderDto.builder()
+                .link(entityToModelConverter.getDetailLink(id, "product"))
+                .title(productService.findProduct(id).getTitle())
+                .build();
     }
 }
