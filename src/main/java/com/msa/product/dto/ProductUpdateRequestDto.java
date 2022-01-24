@@ -3,25 +3,22 @@ package com.msa.product.dto;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import javax.validation.constraints.*;
 
 @Getter
 @NoArgsConstructor
 public class ProductUpdateRequestDto {
 
-    @NotEmpty
+    @NotBlank
     @Size(max = 30)
     private String title;
 
-    @NotNull
+    @PositiveOrZero
     private int price;
 
-    @NotNull
+    @PositiveOrZero
     private int category;
 
-    @NotNull
+    @PositiveOrZero
     private int stock;
 }

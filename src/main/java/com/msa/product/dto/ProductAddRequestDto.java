@@ -4,8 +4,8 @@ import com.msa.product.domain.Product;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 
 // !필드를 초기화하는 코드를 작성하지 않아도 RequestBody에 의해 초기화가 됨.
@@ -13,17 +13,17 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 public class ProductAddRequestDto {
 
-    @NotEmpty
+    @NotBlank
     @Size(max = 30)
     private String title;
 
-    @NotNull
+    @PositiveOrZero
     private int price;
 
-    @NotNull
+    @PositiveOrZero
     private int category;
 
-    @NotNull
+    @PositiveOrZero
     private int stock;
 
     public Product toEntity() {
