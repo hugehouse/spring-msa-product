@@ -1,7 +1,6 @@
 package com.msa.product.handler;
 
 import com.msa.product.controller.IndexController;
-import com.msa.product.controller.converter.EntityToModelConverter;
 import com.msa.product.handler.exception.PurchaseFailureException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
@@ -20,9 +19,8 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 @RequiredArgsConstructor
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-    private final EntityToModelConverter entityToModelConverter;
 
-    // 존재하지 않는 페이지 접근
+    // 존재하지 않는 페이지 접근, 링크를 함께 포함시키기 위해 EntityModel로 생성했음
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<EntityModel<ErrorHolder>> handleIllegalArgumentException(IllegalArgumentException e) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
