@@ -44,7 +44,7 @@ public class GlobalExceptionHandler {
                         , linkTo(methodOn(IndexController.class).productDetail(e.getId())).withSelfRel()));
     }
 
-    private String getResultMessage(final Iterator<ConstraintViolation<?>> violationIterator) {
+    private String getResultMessage(Iterator<ConstraintViolation<?>> violationIterator) {
         final StringBuilder resultMessageBuilder = new StringBuilder();
         while (violationIterator.hasNext()) {
             final ConstraintViolation<?> constraintViolation = violationIterator.next();
