@@ -40,8 +40,8 @@ public class ProductApiController {
     }
 
     @PutMapping("/purchase/rollback/{id}")
-    public ResponseEntity rollbackProduct(@PathVariable Long id, @RequestParam int amount) {
-        productService.rollbackProduct(id, amount);
+    public ResponseEntity rollBackProduct(@PathVariable Long id, @RequestParam int amount) {
+        productService.rollBackProduct(id, amount);
         return ResponseEntity.noContent().build(); // 성공 시 응답 코드 204 전달
     }
 

@@ -63,7 +63,7 @@ public class Product extends BaseTimeEntity {
         }
     }
 
-    public void rollbackStock(int amount) {
+    public void rollBackStock(int amount) {
         this.stock += amount;
     }
 }
