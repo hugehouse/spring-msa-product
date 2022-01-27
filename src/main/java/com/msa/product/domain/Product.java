@@ -62,4 +62,8 @@ public class Product extends BaseTimeEntity {
             throw new PurchaseFailureException(new ErrorHolder(ErrorResponse.StockLack), id);
         }
     }
+
+    public void rollbackStock(int amount) {
+        this.stock += amount;
+    }
 }

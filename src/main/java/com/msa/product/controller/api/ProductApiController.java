@@ -34,8 +34,14 @@ public class ProductApiController {
     }
 
     @PutMapping("/purchase/{id}")
-    public ResponseEntity<EntityModel<Product>> updateProduct(@PathVariable Long id, @RequestParam int amount) {
+    public ResponseEntity updateProduct(@PathVariable Long id, @RequestParam int amount) {
         productService.updateProduct(id, amount); // 실패 시 exception 발생
+        return ResponseEntity.noContent().build(); // 성공 시 응답 코드 204 전달
+    }
+
+    @PutMapping("/purchase/rollback/{id}")
+    public ResponseEntity rollbackProduct(@PathVariable Long id, @RequestParam int amount) {
+        productService.rollbackProduct(id, amount);
         return ResponseEntity.noContent().build(); // 성공 시 응답 코드 204 전달
     }
 

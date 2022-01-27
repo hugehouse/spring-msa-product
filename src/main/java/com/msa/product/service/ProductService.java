@@ -61,6 +61,15 @@ public class ProductService {
         return product;
     }
 
+    // 구입 실패 시 개수 복구
+    @Transactional
+    public Product rollbackProduct(Long itemId, int amount) {
+        Product product = productRepository.findById(itemId)
+                .orElseThrow(() -> new IllegalArgumentException("해당 제품을 찾을 수 없습니다."));
+        product.rollbackStock(amount);
+        return product;
+    }
+
     @Transactional
     public void deleteProduct(Long itemId) {
         Product product = productRepository.findById(itemId)
